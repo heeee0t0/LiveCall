@@ -74,7 +74,7 @@ export default class SignIn extends Component {
             <Text>Forgot your password?</Text>
         </TouchableHighlight>
   
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.props.navigation.push("Login")}>
+        <TouchableHighlight style={[styles.buttonContainer,styles.registerButton]} onPress={() => this.props.navigation.push("Login")}>
             <Text>Login</Text>
         </TouchableHighlight>
       </View>
@@ -124,6 +124,9 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: "#00b5ec",
+  },
+  registerButton: {
+    backgroundColor: "white",
   },
   loginText: {
     color: 'white',

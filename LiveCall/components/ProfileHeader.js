@@ -8,7 +8,7 @@ export default class ProfileHeader extends Component {
             <HeaderContainer>
                 <Avatar source={require("../assets/images.jpg")}/>
                 <Name>Prakhyath Shetty</Name>
-                <Title>LiveCall</Title>
+                <Title>LiveCall   * active now</Title>
                 <NotificationIcon style={{position:"absolute",right:28,top:5}}/>
             </HeaderContainer>
         )
@@ -27,13 +27,13 @@ const Avatar=styled.Image`
 `;
 
 const Title = styled.Text`
-  font-size: 16px;
+  font-size: 13px;
   color: #b8bece;
   font-weight: 500;
 `;
 
 const Name = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   color: #3c4560;
   font-weight: bold;
 `;
