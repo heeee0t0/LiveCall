@@ -13,18 +13,17 @@ import ProfileHeader from "../components/ProfileHeader";
 
 export default class Home extends Component {
     static navigationOptions={
-        header: <ProfileHeader/>
     }
 
   constructor(props) {
     super(props);
     this.state = {
       calls: [
-        {id:1,  name: "Mark Doe",   date:"12 jan", time:'11:14 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar7.png"},
-        {id:2,  name: "Clark Man",  date:"12 jul", time:'15:58 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar6.png"} ,
-        {id:3,  name: "Jaden Boor", date:"12 aug", time:'12:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar5.png"} ,
-        {id:4,  name: "Srick Tree", date:"12 feb", time:'08:32 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
-        {id:5,  name: "John Doe",   date:"12 oct", time:'07:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar3.png"} ,
+        {id:1,  name: "Parjanya kumar",   date:"12 jan", time:'11:14 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar7.png"},
+        {id:2,  name: "Chitra B Rai",  date:"12 jul", time:'15:58 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar6.png"} ,
+        {id:3,  name: "Akshaya kundar", date:"12 aug", time:'12:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar5.png"} ,
+        {id:4,  name: "Bharghavi", date:"12 feb", time:'08:32 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
+        {id:5,  name: "Deeksha shetty",   date:"12 oct", time:'07:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar3.png"} ,
         {id:6,  name: "John Doe",   date:"12 jan", time:'09:54 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar2.png"} ,
         {id:8,  name: "John Doe",   date:"12 jul", time:'11:22 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar1.png"} ,
         {id:9,  name: "John Doe",   date:"12 aug", time:'13:33 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
@@ -40,7 +39,8 @@ export default class Home extends Component {
       callIcon = "https://img.icons8.com/color/48/000000/video-call.png";
     }
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+      onPress={()=>this.props.navigation.push("Joincall")}>
         <View style={styles.row}>
           <Image source={{ uri: item.image }} style={styles.pic} />
           <View>

@@ -1,0 +1,11 @@
+{
+  "name": "livecall.signaling",
+  "version": "1.0.0",
+  "description": "it's a signaling server using socket.io for webRTC livecall app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "prakhyath shetty, parjanya kumar",
+  "license": "ISC"
+}
