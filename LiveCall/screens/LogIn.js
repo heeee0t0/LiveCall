@@ -8,13 +8,9 @@ import {
   Image,
   Alert
 } from 'react-native';
-<<<<<<< HEAD
 import * as firebase from "firebase";
 import firebaseauth from "../firebase/firebaseauth";
-=======
 
-
->>>>>>> 645dfafa4e1de5c88b74680ed1c0f9a0dccb79c5
 export default class LoginIn extends Component {
   static navigationOptions = {
     header: null
