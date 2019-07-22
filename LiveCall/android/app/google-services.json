@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "905817888832",
+    "firebase_url": "https://webrtc-2dc76.firebaseio.com",
+    "project_id": "webrtc-2dc76",
+    "storage_bucket": "webrtc-2dc76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905817888832:android:f4ad14826f28b64b",
+        "android_client_info": {
+          "package_name": "com.janya.webRTC"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905817888832-ngg3ag4vn4afj6a37khlmrd14vdcf4c5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiuy9kKy_1oT9TEyd6uU0C2qpficBBai8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905817888832-ngg3ag4vn4afj6a37khlmrd14vdcf4c5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
