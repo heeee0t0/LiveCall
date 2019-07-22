@@ -4,11 +4,11 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   TouchableHighlight,
   Image,
   Alert
 } from 'react-native';
+
 
 export default class LoginIn extends Component {
   static navigationOptions={
