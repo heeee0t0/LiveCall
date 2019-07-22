@@ -8,19 +8,57 @@ import {
 } from 'react-native';
 
 export default class Joincall extends Component {
+  static navigationOptions={
+    headerTitle:"Join call"
+  }
+
+  constructor(){
+    super();
+    this.handleJoinCall=this.handleJoinCall.bind(this);
+    this.state={
+      user:{},
+      socket:{}
+    }
+  }
+
+  componentDidMount(){
+    const { navigation } = this.props;
+    const user = navigation.getParam('user', {});
+    const socket = navigation.getParam('socket', {});
+    this.setState({
+      user,
+      socket
+    });
+  }
+
+  handleJoinCall=(e)=>{
+    const { user, socket } = this.state;
+    // calling process for specified user
+    socket.emit("joincall",user);
+
+    this.props.navigation.navigate("Videocall", {
+      username: user.name,
+      socket
+    })
+  }
 
   render() {
+    const { user, socket } = this.state;
+    console.log(this.state.user);
     return (
       <View style={styles.container}>
           <View style={styles.header}></View>
-          <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+          <Image style={styles.avatar} source={{uri: user.image}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
-              <Text style={styles.name}>Parjanya kumar</Text>
+              <Text style={styles.name}>{user.name}</Text>
               <Text style={styles.info}>Active now</Text>
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
               
-              <TouchableOpacity style={styles.buttonContainer} onPress={()=>this.props.navigation.navigate("Videocall")}>
+              < TouchableOpacity style = {
+                styles.buttonContainer
+              }
+              onPress = {this.handleJoinCall} >
                 <Text>Join Call</Text>  
               </TouchableOpacity>
             </View>

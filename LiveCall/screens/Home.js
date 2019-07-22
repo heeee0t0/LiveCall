@@ -9,47 +9,77 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import ProfileHeader from "../components/ProfileHeader";
+import io from 'socket.io-client';
+
 
 export default class Home extends Component {
-    static navigationOptions={
-    }
+  static navigationOptions={
+
+  }
 
   constructor(props) {
     super(props);
     this.state = {
-      calls: [
+      socket:{},
+      users: [
         {id:1,  name: "Parjanya kumar",   date:"12 jan", time:'11:14 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar7.png"},
         {id:2,  name: "Chitra B Rai",  date:"12 jul", time:'15:58 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar6.png"} ,
         {id:3,  name: "Akshaya kundar", date:"12 aug", time:'12:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar5.png"} ,
         {id:4,  name: "Bharghavi", date:"12 feb", time:'08:32 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
         {id:5,  name: "Deeksha shetty",   date:"12 oct", time:'07:45 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar3.png"} ,
-        {id:6,  name: "John Doe",   date:"12 jan", time:'09:54 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar2.png"} ,
-        {id:8,  name: "John Doe",   date:"12 jul", time:'11:22 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar1.png"} ,
+        {id:6,  name: "Subhramanya",   date:"12 jan", time:'09:54 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar2.png"} ,
+        {id:8,  name: "Prakhyath",   date:"12 jul", time:'11:22 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar1.png"} ,
         {id:9,  name: "John Doe",   date:"12 aug", time:'13:33 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
         {id:10, name: "John Doe",   date:"12 oct", time:'11:58 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar7.png"} ,
         {id:11, name: "John Doe",   date:"12 jan", time:'09:28 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar1.png"},
-      ]
+      ],
+      userData:{ id:1, username:"prakhyath shetty", email:"prakhyath@gmail.com"}
     };
   }
 
+  handleIncomingCall=(user)=>{
+    const { socket } = this.state;
+    this.props.navigation.navigate("Call",{user,socket});
+  }
+
+  componentDidMount(){
+    const { userData } = this.state;
+    const socket = io('http://localhost:3000');
+    console.log(socket);
+    this.setState({ socket });
+
+    //loged in user data
+    socket.emit('userlogin', JSON.stringify(userData));
+
+    socket.on('getAllUsers', (users) => {
+      this.setState({ users });
+    });
+
+    socket.on('incomingcall', (user) => {
+      this.handleIncomingCall(user);
+    });
+
+    socket.on('userDisconnected', (user) => {
+    });
+  }
+
   renderItem = ({item}) => {
-    var callIcon = "https://img.icons8.com/color/48/000000/phone.png";
-    if(item.video == true) {
-      callIcon = "https://img.icons8.com/color/48/000000/video-call.png";
-    }
+    const { socket } = this.state;
+    const user=item;
+    callIcon = "https://img.icons8.com/color/48/000000/video-call.png";
+
     return (
       <TouchableOpacity
-      onPress={()=>this.props.navigation.push("Joincall")}>
+      onPress={()=>this.props.navigation.push('Joincall',{ user, socket})}>
         <View style={styles.row}>
-          <Image source={{ uri: item.image }} style={styles.pic} />
+          <Image source={{ uri: user.image }} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt}>{item.name}</Text>
+              <Text style={styles.nameTxt}>{user.name}</Text>
             </View>
             <View style={styles.end}>
               <Image style={[styles.icon, {marginLeft:15, marginRight:5, width:14, height:14}]} source={{uri:"https://img.icons8.com/small/14/000000/double-tick.png"}}/>
-              <Text style={styles.time}>{item.date} {item.time}</Text>
+              <Text style={styles.time}>{user.date} {user.time}</Text>
             </View>
           </View>
           <Image style={[styles.icon, { marginRight: 50 }]} source={{uri: callIcon}}/>
@@ -63,10 +93,8 @@ export default class Home extends Component {
       <View style={{ flex: 1 }} >
         <FlatList 
           extraData={this.state}
-          data={this.state.calls}
-          keyExtractor = {(item) => {
-            return item.id;
-          }}
+          data={this.state.users}
+          keyExtractor = {(item,index) => item.id.toString()}
           renderItem={this.renderItem}/>
       </View>
     );
