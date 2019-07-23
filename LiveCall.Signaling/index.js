@@ -9,13 +9,18 @@ function listAllUsers(){
 }
 
 io.on('connection', function(socket){
-    console.log("connected");
+    console.log("connected", socket.id );
+
     socket.on('userlogin', function (userData) {
-        users.push({id:socket.id, name:userData.username});
+        var userData=JSON.parse(userData);
+        console.log("userData", userData );
+        users.push({id:socket.id, name:userData.username ,email:userData.email,role:""});
+        listAllUsers();
+        socket.emit('getAllUsers', users);
         socket.broadcast.emit('getAllUsers', users);
     });
 
-    listAllUsers();
+    //listAllUsers();
 
     socket.on('joincall', function (user) {
         io.to(user.id).emit('incomingcall', user);
