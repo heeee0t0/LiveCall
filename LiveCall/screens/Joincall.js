@@ -7,7 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-export default class Joincall extends Component {
+class Joincall extends Component {
   static navigationOptions={
     headerTitle:"Join call"
   }
@@ -36,10 +36,14 @@ export default class Joincall extends Component {
     // calling process for specified user
     socket.emit("joincall",user);
 
-    this.props.navigation.navigate("Videocall", {
-      username: user.name,
-      socket
-    })
+    socket.on('callreceived', (user) => {
+      console.log("callreceived");
+      this.props.navigation.navigate("Videocall", {
+        username: user.name,
+        caller:true,
+        socket
+      })
+    });
   }
 
   render() {
@@ -67,6 +71,8 @@ export default class Joincall extends Component {
     );
   }
 }
+
+export default Joincall;
 
 const styles = StyleSheet.create({
   header:{

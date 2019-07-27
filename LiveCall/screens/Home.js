@@ -12,13 +12,14 @@ import {
 import io from 'socket.io-client';
 
 
-export default class Home extends Component {
+class Home extends Component {
   static navigationOptions={
-
   }
 
   constructor(props) {
     super(props);
+    this.getAllUsers=this.getAllUsers.bind(this)
+    this.handleIncomingCall=this.handleIncomingCall.bind(this)
     this.state = {
       socket:{},
       users: [
@@ -33,7 +34,7 @@ export default class Home extends Component {
         {id:10, name: "John Doe",   date:"12 oct", time:'11:58 am', video:true,  image:"https://bootdey.com/img/Content/avatar/avatar7.png"} ,
         {id:11, name: "John Doe",   date:"12 jan", time:'09:28 am', video:true, image:"https://bootdey.com/img/Content/avatar/avatar1.png"},
       ],
-      userData:{ id:1, username:"prakhyath shetty", email:"prakhyath@gmail.com"}
+      account:{ id:1, username:"prakhyath shetty", email:"prakhyath@gmail.com"}
     };
   }
 
@@ -42,17 +43,31 @@ export default class Home extends Component {
     this.props.navigation.navigate("Call",{user,socket});
   }
 
+  getAllUsers=(users)=>{
+    this.setState({ users });
+  }
+
   componentDidMount(){
-    const { userData } = this.state;
+    const { navigation } = this.props;
+    const account = navigation.getParam('account', {});
+    this.setState({
+      account
+    });
+
+    console.log('account',account);
     const socket = io('http://localhost:3000');
+
     console.log(socket);
     this.setState({ socket });
 
     //loged in user data
-    socket.emit('userlogin', JSON.stringify(userData));
+    socket.emit('userlogin', JSON.stringify(account ));
 
     socket.on('getAllUsers', (users) => {
-      this.setState({ users });
+      if(Array.isArray(users)){
+        const newUsers = users.filter(x=>x.email!=account.email);
+        this.getAllUsers(newUsers);
+      }
     });
 
     socket.on('incomingcall', (user) => {
@@ -100,6 +115,8 @@ export default class Home extends Component {
     );
   }
 }
+
+export default Home;
 
 const styles = StyleSheet.create({
   row: {

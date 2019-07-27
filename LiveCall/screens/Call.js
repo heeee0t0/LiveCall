@@ -21,17 +21,29 @@ export default class Call extends Component {
     this.state = {
       modalVisible:false,
       userSelected:[],
-      User:{
+      user:{
         id:1,
         name:"Mark Johnson",
         image:"https://bootdey.com/img/Content/avatar/avatar6.png",
-      }
+      },
+      socket:{}
     };
   }
 
+  componentDidMount(){
+    const { navigation } = this.props;
+    const user = navigation.getParam('user', {});
+    const socket = navigation.getParam('socket', {});
+    this.setState({
+      user,
+      socket
+    });
+  }
+
   handleReceiveCall=()=>{
-    
-    this.props.navigation.navigate("Videocall",{user:{},socket:{}});
+    const {user,socket} = this.state;
+    this.props.navigation.navigate("Videocall",{ username: user.name,socket});
+    socket.emit("callreceived",user)
   }
 
   clickEventListener = () =>{
@@ -46,13 +58,13 @@ export default class Call extends Component {
             <Image style={[styles.iconImg, { marginRight: 50 }]} source={{uri: "https://img.icons8.com/color/48/000000/video-call.png"}}/>
             <Text style={styles.subText}>LIVE CALL</Text>
           </View>
-          <Text style={styles.title}>{this.state.User.name}</Text>
+          <Text style={styles.title}>{this.state.user.name}</Text>
           <Text style={styles.subText}>CALLING</Text>
         </View>
         {/* <TouchableOpacity style={[styles.btnStopCall, styles.shadow]} onPress={()=> this.clickEventListener()}>
           <Image style={styles.iconImg} source={{uri: "https://img.icons8.com/windows/32/000000/phone.png"}}/>
         </TouchableOpacity> */}
-        <Image style={[styles.image]} source={{ uri: this.state.User.image }}/>
+        <Image style={[styles.image]} source={{ uri: this.state.user.image }}/>
         <View style={styles.bottomBar}>
           <TouchableOpacity style={[styles.btnStopCall, styles.shadow]} onPress={()=> this.clickEventListener()}>
             <Image style={styles.iconImg} source={{uri: "https://img.icons8.com/windows/32/000000/phone.png"}}/>

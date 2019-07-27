@@ -14,7 +14,7 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 
-export default class Videocall extends Component {
+class Videocall extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('username',""),
@@ -34,6 +34,7 @@ export default class Videocall extends Component {
     this.state={
       user:{},
       socket:{},
+      caller:false,
       localStreamURL:null,
       remoteStreamURL:null,
       iceConnectionState:'',
@@ -56,7 +57,9 @@ export default class Videocall extends Component {
     pc.onaddstream=this.onAddStream
     pc.onicecandidate=this.onIceCandidate
 
+    
     pc.addStream(this.state.localVideoStream)
+    console.log("localstream",this.state.localVideoStream);
     this.pc = pc;
   }
 
@@ -87,7 +90,7 @@ export default class Videocall extends Component {
 
   onAddStream(e) {
     console.log("onAddStream",e.stream.toURL());
-    console.log("onAddStream toatal",e.stream);
+    console.log("onAddStream full",e.stream);
     this.setState({
       remoteVideo:e.stream,
       remoteStreamURL: e.stream.toURL()
@@ -122,7 +125,9 @@ export default class Videocall extends Component {
         // send offer to signaling server
         if (offerOrAnswer.type == "offer") {
           console.log("offerOrAnswer", offerOrAnswer.type);
-          this.state.socket.emit('offer', JSON.stringify(offerOrAnswer));
+          setTimeout(() => {
+            this.state.socket.emit('offer', JSON.stringify(offerOrAnswer));
+          }, 5000);
           console.log("emit called");
         } else {
           this.state.socket.emit('answer', JSON.stringify(offerOrAnswer));
@@ -139,6 +144,7 @@ export default class Videocall extends Component {
       isOfferReceived: true
     }, () => {
       console.log("offer received", offer)
+      this.handleOffer();
     })
   }
 
@@ -148,7 +154,7 @@ export default class Videocall extends Component {
     
     const { pc } = this;
     var offerSdp = { "sdp": payload.description.sdp, "type": "offer" };
-    console.log("setupWebRTC g barpunda?",offerSdp)
+    console.log("offerSdp",offerSdp);
     
     pc.setRemoteDescription(new RTCSessionDescription(offerSdp))
     
@@ -161,8 +167,8 @@ export default class Videocall extends Component {
       pc.createAnswer().then(answer => {
         pc.setLocalDescription(answer).then(() => {
           // Send pc.localDescription to peer
-          console.log("answer generated",answer);
-          this.setState({answer},()=>{console.log("setstateanswer")});
+            console.log("answer generated",answer);
+          this.setState({answer});
         });
       });
     } catch (error) {
@@ -189,6 +195,7 @@ export default class Videocall extends Component {
     const self = this; 
     const { navigation } = this.props;
     const user = navigation.getParam('user', {});
+    const caller = navigation.getParam('caller', false);
     const socket = navigation.getParam('socket', {});
     this.setState({
       user,
@@ -231,12 +238,7 @@ export default class Videocall extends Component {
       })
       .then(stream => {
         // Got stream!
-        console.log("getUserMedia.stream",stream);
-        let { localVideo } = self.state;
-        localVideo.srcObject = new MediaStream();
-        localVideo.srcObject.addTrack(stream.getTracks()[0], stream);
-        localVideo.srcObject.addTrack(stream.getTracks()[1], stream);
-        console.log("localVideo.srcObject1",localVideo.srcObject);
+        console.log("getUserMedia----stream",stream);
         this.setState({
             localVideoStream:stream,
             localStreamURL: stream.toURL()
@@ -249,7 +251,9 @@ export default class Videocall extends Component {
     });
 
     //handling join call
-    this.handleJoin();
+    if(caller){
+      this.handleJoin();
+    }
   }
 
   onCallHangUp=()=>{
@@ -259,7 +263,7 @@ export default class Videocall extends Component {
   render() {
       return (
           <View style={styles.root}>
-              <RTCView streamURL={this.state.localStreamURL} style={styles.localVideo} />
+              <RTCView streamURL={this.state.remoteStreamURL} style={styles.localVideo} />
               <RTCView streamURL={this.state.localStreamURL} style={styles.remoteVideo} />
               <View style={styles.buttonContainer}>
                   <TouchableHighlight style={[styles.button, styles.buttonCall]} onPress={() => this.onCallHangUp()}>
@@ -270,6 +274,9 @@ export default class Videocall extends Component {
       )
   }
 }
+
+
+export default Videocall;
 
 const remoteVideoWidth=Math.round(screenWidth-114);
 

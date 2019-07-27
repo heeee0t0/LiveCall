@@ -52,7 +52,7 @@ export default class LoginIn extends Component {
                 if ((childEmail.val().email == self.state.email) && (childPassword.val().password == self.state.password)) {
                   const username=childEmail.val().username;
                   const email=childEmail.val().email;
-                  self.props.navigation.push("Home",{userdata:{name:username,email:email}});
+                  self.props.navigation.push("Home",{account:{username,email}});
                 }
               })
             }
